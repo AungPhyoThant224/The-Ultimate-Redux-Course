@@ -3,11 +3,11 @@ import { compose, pipe } from "lodash/fp"
 let input = " JavaScript ";
 
 const trim = str => str.trim();
-const wrapInDiv = str => `<div>${str}</div>`
+const wrap = type => str => `<${type}>${str}</${type}>`
 const toLowerCase = str => str.toLowerCase();
 
-let transformC = compose(wrapInDiv, toLowerCase, trim);
+let transformC = compose(wrap("div"), toLowerCase, trim);
 console.log(transformC(input));
 
-let transformP = pipe(trim, toLowerCase, wrapInDiv);
+let transformP = pipe(trim, toLowerCase, wrap("span"));
 console.log(transformP(input));

@@ -1,1 +1,1 @@
-import './exercises'
+import './functional/exercises'

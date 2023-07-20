@@ -1,7 +1,5 @@
-const logger = store => next => action => {
-    console.log(store);
-    console.log(next);
-    console.log(action);
+const logger = param => store => next => action => {
+    console.log("Logger", param);
     next(action);
 }
 

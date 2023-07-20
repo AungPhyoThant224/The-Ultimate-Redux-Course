@@ -14,8 +14,9 @@ store.dispatch(bugAdded({ descripton: "Bug 2" }));
 store.dispatch(bugResolved({ id: 1 }));
 // store.dispatch(bugRemoved(1));
 
-const unresolvedBugs = getUnresolvedBugs(store.getState());
-console.log("Unresolved", unresolvedBugs);
+const x = getUnresolvedBugs(store.getState());
+const y = getUnresolvedBugs(store.getState());
+console.log(x === y);
 
 unsubscribe();
 console.log(store.getState());

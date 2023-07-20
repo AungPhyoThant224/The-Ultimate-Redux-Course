@@ -1,4 +1,4 @@
-import { bugAdded, bugRemoved, bugResolved } from "./store/bugs";
+import { bugAdded, bugResolved, getUnresolvedBugs } from "./store/bugs";
 import configureStore from "./store/configureStore";
 import { projectAdded } from "./store/project";
 
@@ -13,6 +13,9 @@ store.dispatch(bugAdded({ descripton: "Bug 1" }));
 store.dispatch(bugAdded({ descripton: "Bug 2" }));
 store.dispatch(bugResolved({ id: 1 }));
 // store.dispatch(bugRemoved(1));
+
+const unresolvedBugs = getUnresolvedBugs(store.getState());
+console.log("Unresolved", unresolvedBugs);
 
 unsubscribe();
 console.log(store.getState());

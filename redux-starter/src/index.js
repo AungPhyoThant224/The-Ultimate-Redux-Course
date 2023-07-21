@@ -2,6 +2,7 @@ import { bugAdded, bugAssignedToUser, bugResolved, getBugByUser, getUnresolvedBu
 import configureStore from "./store/configureStore";
 import { projectAdded } from "./store/project";
 import { userAdded } from "./store/user";
+import * as actions from "./store/api"
 
 const store = configureStore();
 
@@ -27,11 +28,7 @@ const store = configureStore();
 //     console.log(getState());
 // });
 
-store.dispatch({
-    type: "apiCallBegan",
-    payload: {
-        url: "/bugs",
-        onSuccess: "bugRecieved",
-        onError: "apiRequestFailed"
-    }
-});
+store.dispatch(actions.apiCallBegan({
+    url: "/bugs",
+    onSuccess: "bugRecieved",
+}))

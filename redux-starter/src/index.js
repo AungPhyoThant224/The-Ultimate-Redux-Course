@@ -1,4 +1,4 @@
-import { bugAdded, bugAssignedToUser, bugResolved, getBugByUser, getUnresolvedBugs } from "./store/bugs";
+import { bugAdded, bugAssignedToUser, bugResolved, getBugByUser, getUnresolvedBugs, loadBugs } from "./store/bugs";
 import configureStore from "./store/configureStore";
 import { projectAdded } from "./store/project";
 import { userAdded } from "./store/user";
@@ -28,7 +28,5 @@ const store = configureStore();
 //     console.log(getState());
 // });
 
-store.dispatch(actions.apiCallBegan({
-    url: "/bugs",
-    onSuccess: "bugRecieved",
-}))
+//UI layer
+store.dispatch(loadBugs());

@@ -1,8 +1,5 @@
-import { bugAdded, bugAssignedToUser, bugResolved, getBugByUser, getUnresolvedBugs, addBug, resolveBug, loadBugs, assignBugToUser } from "./store/bugs";
+import { loadBugs, assignBugToUser } from "./store/bugs";
 import configureStore from "./store/configureStore";
-import { projectAdded } from "./store/project";
-import { userAdded } from "./store/user";
-import * as actions from "./store/api"
 
 const store = configureStore();
 

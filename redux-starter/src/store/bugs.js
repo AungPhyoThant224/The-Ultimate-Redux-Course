@@ -44,7 +44,7 @@ const slice = createSlice({
     }
 })
 
-export const { bugAdded, bugResolved, bugAssignedToUser, bugRecieved, bugRequested, bugRequestFailed } = slice.actions;
+const { bugAdded, bugResolved, bugAssignedToUser, bugRecieved, bugRequested, bugRequestFailed } = slice.actions;
 export default slice.reducer;
 
 // Action Creator

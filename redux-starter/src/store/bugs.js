@@ -28,11 +28,7 @@ const slice = createSlice({
         },
 
         bugAdded: (bugs, action) => {
-            bugs.list.push({
-                id: ++lastId,
-                description: action.payload.description,
-                resolved: false,
-            })
+            bugs.list.push(action.payload)
         },
 
         bugAssignedToUser: (bugs, action) => {
@@ -68,6 +64,13 @@ export const loadBugs = () => (dispatch, getState) => {
         onError: bugRequestFailed.type,
     }))
 }
+
+export const addBug = bug => apiCallBegan({
+    url,
+    method: 'post',
+    data: bug,
+    onSuccess: bugAdded.type
+})
 
 //Selectors
 //Memoizition

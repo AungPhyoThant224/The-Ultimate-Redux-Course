@@ -1,4 +1,4 @@
-import { bugAdded, bugAssignedToUser, bugResolved, getBugByUser, getUnresolvedBugs, loadBugs } from "./store/bugs";
+import { bugAdded, bugAssignedToUser, bugResolved, getBugByUser, getUnresolvedBugs, addBug } from "./store/bugs";
 import configureStore from "./store/configureStore";
 import { projectAdded } from "./store/project";
 import { userAdded } from "./store/user";
@@ -29,6 +29,5 @@ const store = configureStore();
 // });
 
 //UI layer
-store.dispatch(loadBugs());
+store.dispatch(addBug({ description: "a" }));
 
-setTimeout(() => store.dispatch(loadBugs()), 2000);

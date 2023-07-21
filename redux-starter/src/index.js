@@ -21,8 +21,17 @@ const store = configureStore();
 // unsubscribe();
 // console.log(bugByUser);
 
-store.dispatch((dispatch, getState) => {
-    dispatch({ type: 'bugReceived', bugs: [1, 2, 3] });
-    dispatch({ type: 'error', payload: { message: 'An error occured.' } })
-    console.log(getState());
+// store.dispatch((dispatch, getState) => {
+//     dispatch({ type: 'bugReceived', bugs: [1, 2, 3] });
+//     dispatch({ type: 'error', payload: { message: 'An error occured.' } })
+//     console.log(getState());
+// });
+
+store.dispatch({
+    type: "apiCallBegan",
+    payload: {
+        url: "/bugs",
+        onSuccess: "bugRecieved",
+        onError: "apiRequestFailed"
+    }
 });

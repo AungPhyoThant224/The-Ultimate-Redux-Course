@@ -4,7 +4,7 @@
   "description": "Redux Starter Project",
   "main": "index.js",
   "scripts": {
-    "start": "webpack-dev-server --config ./webpack.config.js"
+    "start": "export NODE_OPTIONS=--openssl-legacy-provider; webpack-dev-server --config ./webpack.config.js"
   },
   "keywords": [],
   "author": "Mosh Hamedani",
@@ -16,6 +16,7 @@
   },
   "dependencies": {
     "@reduxjs/toolkit": "^1.2.5",
+    "axios": "^1.4.0",
     "immer": "^10.0.2",
     "immutable": "^4.3.1",
     "lodash": "^4.17.21",

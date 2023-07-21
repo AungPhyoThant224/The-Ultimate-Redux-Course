@@ -72,6 +72,13 @@ export const addBug = bug => apiCallBegan({
     onSuccess: bugAdded.type
 })
 
+export const resolveBug = bugId => apiCallBegan({
+    url: url + '/' + bugId,
+    method: 'patch',
+    data: { resolved: true },
+    onSuccess: bugResolved.type
+})
+
 //Selectors
 //Memoizition
 

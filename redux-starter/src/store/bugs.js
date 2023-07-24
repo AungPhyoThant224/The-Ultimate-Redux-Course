@@ -101,7 +101,7 @@ export const assignBugToUser = ({ userId, bugId }) => apiCallBegan({
 export const getUnresolvedBugs = createSelector(
     state => state.entities.bugs,
     state => state.entities.project,
-    (bugs, projects) => bugs.filter(bug => !bug.resolved),
+    (bugs, projects) => bugs.list.filter(bug => !bug.resolved),
 )
 
 export const getBugByUser = userId => createSelector(

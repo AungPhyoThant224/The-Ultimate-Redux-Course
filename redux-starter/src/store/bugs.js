@@ -3,8 +3,6 @@ import { createSelector } from "reselect";
 import { apiCallBegan } from "./api";
 import moment from "moment";
 
-let lastId = 0;
-
 const slice = createSlice({
     name: 'bugs',
     initialState: {
@@ -44,7 +42,7 @@ const slice = createSlice({
     }
 })
 
-const { bugAdded, bugResolved, bugAssignedToUser, bugRecieved, bugRequested, bugRequestFailed } = slice.actions;
+export const { bugAdded, bugResolved, bugAssignedToUser, bugRecieved, bugRequested, bugRequestFailed } = slice.actions;
 export default slice.reducer;
 
 // Action Creator

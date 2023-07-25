@@ -1,29 +1,34 @@
 import React, { Component } from 'react'
-import StoreContext from '../context/storeContext'
-import { loadBugs } from '../store/bugs';
-
-export default class Bugs extends Component {
-
-    static contextType = StoreContext;
-    state = {bugs: []}
+import { loadBugs, getUnresolvedBugs, resolveBug } from '../store/bugs';
+import { connect } from 'react-redux';
+class Bugs extends Component {
 
     componentDidMount(){
-        const store = this.context;
-        this.unsubscribe = store.subscribe(() => {
-            const bugsInStore = store.getState().entities.bugs.list;
-            if(this.state.bugs !== bugsInStore) this.setState({bugs: bugsInStore})
-        })
-
-        store.dispatch(loadBugs());
+        this.props.loadBugs();
     }
 
-    componentWillUnmount(){
-        this.unsubscribe();
-    }
 
   render() {
     return (
-      <ul>{this.state.bugs.map((bug) => <li key={bug.id}>{bug.description}</li>)}</ul>
+      <ul>
+        {this.props.bugs.map((bug) => (
+            <li key={bug.id}>
+                {bug.description}
+                <button onClick={() => {this.props.resolveBug(bug.id)}}>Resolve</button>
+            </li>
+        ))}
+      </ul>
     )
   }
 }
+
+const mapStateToProps = state => ({
+    bugs: getUnresolvedBugs(state)
+})
+
+const mapDispatchToProps = dispatch => ({
+    loadBugs: () => dispatch(loadBugs()),
+    resolveBug: (bugId) => dispatch(resolveBug(bugId)),
+})
+
+export default connect(mapStateToProps, mapDispatchToProps)(Bugs);

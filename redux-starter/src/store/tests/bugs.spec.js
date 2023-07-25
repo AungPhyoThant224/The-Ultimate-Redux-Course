@@ -1,7 +1,7 @@
 // Social Test.
 import axios from "axios";
 import MockAdapter from "axios-mock-adapter";
-import { addBug, resolveBug, getUnresolvedBugs } from "../bugs";
+import { addBug, resolveBug, getUnresolvedBugs, loadBugs } from "../bugs";
 import configureStore from "../configureStore";
 
 describe("Bug Slice", () => {
@@ -21,6 +21,56 @@ describe("Bug Slice", () => {
                 list: []
             }
         }
+    });
+
+    describe("loading Bug", () => {
+        describe("if the bugs exit in the cache", () => {
+            it("they should not be fetch from the server", async () => {
+                fakeAxios.onGet('/bugs').reply(200, [{ id: 1 }]);
+
+                await store.dispatch(loadBugs());
+                await store.dispatch(loadBugs());
+
+                expect(fakeAxios.history.get.length).toBe(1);
+            })
+        })
+
+        describe("if the bugs not exit in the cache", () => {
+            it("they should be fetch from the server and add to the store", async () => {
+                fakeAxios.onGet('/bugs').reply(200, [{ id: 1 }]);
+
+                await store.dispatch(loadBugs());
+
+                expect(bugSlice().list).toHaveLength(1);
+            });
+
+            describe("loading indicator", () => {
+                it("should be true while fetching from the server", () => {
+                    fakeAxios.onGet('/bugs').reply(() => {
+                        expect(bugSlice().loading).toBe(true);
+                        return (200, [{ id: 1 }])
+                    });
+
+                    store.dispatch(loadBugs());
+                })
+
+                it("should be false after fetching from the server", async () => {
+                    fakeAxios.onGet('/bugs').reply(200, [{ id: 1 }]);
+
+                    await store.dispatch(loadBugs());
+
+                    expect(bugSlice().loading).toBe(false);
+                })
+
+                it("should be false if server return error", async () => {
+                    fakeAxios.onGet('/bugs').reply(500);
+
+                    await store.dispatch(loadBugs());
+
+                    expect(bugSlice().loading).toBe(false);
+                })
+            })
+        })
     })
 
     it("should mark the bug as resolved if it's save to server", async () => {

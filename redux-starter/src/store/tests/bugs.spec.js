@@ -1,7 +1,7 @@
 // Social Test.
 import axios from "axios";
 import MockAdapter from "axios-mock-adapter";
-import { addBug, getUnresolvedBugs } from "../bugs";
+import { addBug, resolveBug, getUnresolvedBugs } from "../bugs";
 import configureStore from "../configureStore";
 
 describe("Bug Slice", () => {
@@ -21,6 +21,26 @@ describe("Bug Slice", () => {
                 list: []
             }
         }
+    })
+
+    it("should mark the bug as resolved if it's save to server", async () => {
+        fakeAxios.onPost('/bugs').reply(200, { id: 1 });
+        fakeAxios.onPatch('/bugs/1').reply(200, { id: 1, resolved: true });
+
+        await store.dispatch(addBug({}));
+        await store.dispatch(resolveBug(1));
+
+        expect(bugSlice().list[0].resolved).toBe(true);
+    })
+
+    it("should not mark the bug as resolved if it's not save to server", async () => {
+        fakeAxios.onPost('/bugs').reply(200, { id: 1 });
+        fakeAxios.onPatch('/bugs/1').reply(500);
+
+        await store.dispatch(addBug({}));
+        await store.dispatch(resolveBug(1));
+
+        expect(bugSlice().list[0].resolved).not.toBe(true);
     })
 
     it("should add bug to the store if it's save to server", async () => {
@@ -43,7 +63,7 @@ describe("Bug Slice", () => {
     });
 
     describe("Bug Selectors", () => {
-        it("Get unresolve bug if there unresolve bug in store", async () => {
+        it("Get Unresolve Bugs", async () => {
             const state = createState();
             state.entities.bugs.list = [{ id: 1, resolved: true }, { id: 2 }, { id: 3 }];
 

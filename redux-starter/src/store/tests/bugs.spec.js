@@ -1,7 +1,7 @@
 // Social Test.
 import axios from "axios";
 import MockAdapter from "axios-mock-adapter";
-import { addBug, resolveBug, getUnresolvedBugs, loadBugs } from "../bugs";
+import { addBug, resolveBug, getUnresolvedBugs, loadBugs, assignBugToUser, getBugByUser } from "../bugs";
 import configureStore from "../configureStore";
 
 describe("Bug Slice", () => {
@@ -23,7 +23,7 @@ describe("Bug Slice", () => {
         }
     });
 
-    describe("loading Bug", () => {
+    describe("Loading Bug", () => {
         describe("if the bugs exit in the cache", () => {
             it("they should not be fetch from the server", async () => {
                 fakeAxios.onGet('/bugs').reply(200, [{ id: 1 }]);
@@ -112,14 +112,41 @@ describe("Bug Slice", () => {
         expect(bugSlice().list).toHaveLength(0);
     });
 
+    it("should assign bug to user if it's save to server", async () => {
+        fakeAxios.onPost('/bugs').reply(200, { id: 1 });
+        fakeAxios.onPatch('/bugs/1').reply(200, { id: 1, userId: 1 });
+
+        await store.dispatch(addBug());
+        await store.dispatch(assignBugToUser({ userId: 1, bugId: 1 }));
+        expect(bugSlice().list[0].userId).toBe(1);
+    })
+
+    it("should not assign bug to user if it's not save to server", async () => {
+        fakeAxios.onPost('/bugs').reply(200, { id: 1 });
+        fakeAxios.onPatch('/bugs/1').reply(500);
+
+        await store.dispatch(addBug());
+        await store.dispatch(assignBugToUser({ userId: 1, bugId: 1 }));
+        expect(bugSlice().list[0].userId).not.toBe(1);
+    })
+
     describe("Bug Selectors", () => {
-        it("Get Unresolve Bugs", async () => {
+        it("get unresolve bugs", () => {
             const state = createState();
             state.entities.bugs.list = [{ id: 1, resolved: true }, { id: 2 }, { id: 3 }];
 
             const unresolvedBugs = getUnresolvedBugs(state);
 
             expect(unresolvedBugs).toHaveLength(2);
+        })
+
+        it("get bug by user", () => {
+            const state = createState();
+            state.entities.bugs.list = [{ id: 1, userId: 1 }, { id: 2 }, { id: 3 }];
+
+            const bugByUser = getBugByUser(1)(state);
+
+            expect(bugByUser).toHaveLength(1)
         })
     })
 })
@@ -130,7 +157,7 @@ describe("Bug Slice", () => {
 
 // describe("Bug Slice", () => {
 //     describe("Action Creators", () => {
-//         it("Add Bug", () => {
+//         it("add bug", () => {
 //             const bug = { description: 'a' };
 //             const result = addBug(bug);
 //             const expected = {
